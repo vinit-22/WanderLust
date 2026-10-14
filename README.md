@@ -1,4 +1,4 @@
-# 🌍 WanderLust: DevSecOps CI/CD Pipeline
+# 🌍 WanderLust: DevSecOps End-to-End CI/CD Pipeline
 
 **WanderLust** is a full-stack web application secured and deployed using an end-to-end **DevSecOps CI/CD pipeline**. By enforcing a "Shift-Left" security strategy, this architecture automatically tests code quality, uncovers library vulnerabilities, patches container layers, and safely automates production-ready delivery.
 
@@ -31,45 +31,49 @@ The declarative `Jenkinsfile` maps out a highly resilient automated lifecycle:
 ---
 
 ### 🏠 Infrastructure Environment
-![AWS EC2 Instance Dashboard](images/aws-ec2-instance.png)
+
+![AWS EC2 Instance Dashboard](./Screenshot/EC2.png)
 *Figure 1: Production hosting running on an AWS EC2 instance (`m7i-flex.large`).*
----
+
 ---
 
 ## 📊 Pipeline Build & Verification Metrics
 
-### 1. Jenkins Pipeline Pipeline Execution
+### 1. Jenkins Pipeline Execution
 The pipeline tracks seven core security and delivery stages. The integration runs automated code retrieval, dependencies verification using **OWASP Dependency-Check**, container vulnerability scans via **Trivy**, and localized container creation.
 
-![Jenkins Automation Stage View](images/jenkins-pipeline-flow.png)
+![Jenkins Automation Stage View](./Screenshot/jenkins.png)
 *Figure 2: Successful execution flow across all pipeline stages in the Jenkins dashboard.*
 
 ### 2. SonarQube Static Application Security Testing (SAST)
 Static scans analyze codebase parameters across 13k+ lines of code to enforce quality gates before building artifacts.
 
-![SonarQube Code Metrics Dashboard](images/sonarqube-analysis.png)
+![SonarQube Code Metrics Dashboard](./Screenshot/SonarQube.png)
 *Figure 3: Codebase review showing a passing status for the project quality gate.*
 
 ### 3. Container Runtime State
 Services operate in detached environments managed by container network definitions inside the host system.
 
-![Docker Daemon Process Status](images/docker-containers-list.png)
-*Figure 4: Active runtime status of the frontend, backend, database, cache, and SAST container instances.*
+![Docker Daemon Process Status](./Screenshot/Docker%20Container.png)
+*Figure 4: Active runtime status of the frontend, backend, database, cache, and SonarQube container instances.*
 
----
 ---
 
 ## 🖥️ Live Application Deployment Preview
 
 Once the pipeline successfully finishes the `Deploy using Docker compose` phase, the web client becomes accessible over port `5173`.
 
-### Main Discover Dashboard
-![WanderLust Application Homepage UI](images/app-homepage.png)
-*Figure 5: Live production storefront showing the thematic discover layout and travel category filters.*
+### Accessing via IP / Localhost
+![WanderLust Application Homepage UI via IP](./Screenshot/ip%20output.png)
+*Figure 5: Target application landing interface verified active via public IP hosting.*
 
-### Dynamic Listing Detail View
-![WanderLust Listing Details Page](images/app-details-view.png)
-*Figure 6: Individual item dynamic details page routed via production environment URL maps.*
+### Accessing via DNS Routing
+![WanderLust Application Homepage UI via DNS](./Screenshot/DNS_Output.png)
+*Figure 6: Live production storefront showing the thematic discover layout and travel category filters.*
+
+### Blog Post Configuration
+![WanderLust Listing Details Page](./Screenshot/Blog%20post.png)
+*Figure 7: Target details visualization view showcasing dynamic content and user post publishing features.*
 
 ---
 
