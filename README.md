@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# 🌍 WanderLust: DevSecOps CI/CD Pipeline
-=======
 # 🌍 WanderLust: DevSecOps End-to-End CI/CD Pipeline
->>>>>>> d0383a4ecb61de5f2f595da1b6a25e3e20bb8de7
 
 **WanderLust** is a full-stack web application secured and deployed using an end-to-end **DevSecOps CI/CD pipeline**. By enforcing a "Shift-Left" security strategy, this architecture automatically tests code quality, uncovers library vulnerabilities, patches container layers, and safely automates production-ready delivery.
 
@@ -31,6 +27,30 @@ The declarative `Jenkinsfile` maps out a highly resilient automated lifecycle:
 5. **Trivy Filesystem Scan:** Runs `trivy fs` to isolate underlying file system risks early.
 6. **Build & Security Scan:** Builds the Docker container image and applies image layer scanning.
 7. **Deploy:** Spins up application microservices natively via `docker-compose up -d`.
+
+---
+## 🚀 Infrastructure Setup & Quick Start
+
+### 1. Prerequisites & Tool Configurations
+Ensure your target server (e.g., AWS EC2 instance) has **Docker** and **Trivy** pre-installed. 
+
+**Spin up the SonarQube Container instance:**
+```bash
+docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
+```
+
+### 2. Jenkins Server Setup
+1. Install essential plugins via **Manage Jenkins** ➡️ **Plugins**:
+   - `SonarQube Scanner`
+   - `OWASP Dependency-Check`
+   - `Docker Pipeline`
+2. Map Webhook access and link authentication tokens generated under `http://<your-ip>:9000` inside your Jenkins Global Credentials manager.
+
+### 3. Running the Pipeline
+1. Create a **New Item** in Jenkins, naming it a **Pipeline** job type.
+2. Under **Pipeline Definition**, choose *Pipeline script from SCM*.
+3. Add your repository link: `https://github.com`.
+4. Define your script path (`Jenkinsfile`) and select **Build Now** to execute the automation sequence.
 
 ---
 
@@ -81,30 +101,6 @@ Once the pipeline successfully finishes the `Deploy using Docker compose` phase,
 
 ---
 
-## 🚀 Infrastructure Setup & Quick Start
-
-### 1. Prerequisites & Tool Configurations
-Ensure your target server (e.g., AWS EC2 instance) has **Docker** and **Trivy** pre-installed. 
-
-**Spin up the SonarQube Container instance:**
-```bash
-docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
-```
-
-### 2. Jenkins Server Setup
-1. Install essential plugins via **Manage Jenkins** ➡️ **Plugins**:
-   - `SonarQube Scanner`
-   - `OWASP Dependency-Check`
-   - `Docker Pipeline`
-2. Map Webhook access and link authentication tokens generated under `http://<your-ip>:9000` inside your Jenkins Global Credentials manager.
-
-### 3. Running the Pipeline
-1. Create a **New Item** in Jenkins, naming it a **Pipeline** job type.
-2. Under **Pipeline Definition**, choose *Pipeline script from SCM*.
-3. Add your repository link: `https://github.com`.
-4. Define your script path (`Jenkinsfile`) and select **Build Now** to execute the automation sequence.
-
----
 
 ## 🔒 Security Policy
 All deployment builds **must clear zero-tolerance thresholds** for Critical vulnerabilities flagged by both Trivy and OWASP scanners before entering public production stages.
