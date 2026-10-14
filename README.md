@@ -30,10 +30,53 @@ The declarative `Jenkinsfile` maps out a highly resilient automated lifecycle:
 
 ---
 
+### 🏠 Infrastructure Environment
+![AWS EC2 Instance Dashboard](images/aws-ec2-instance.png)
+*Figure 1: Production hosting running on an AWS EC2 instance (`m7i-flex.large`).*
+---
+---
+
+## 📊 Pipeline Build & Verification Metrics
+
+### 1. Jenkins Pipeline Pipeline Execution
+The pipeline tracks seven core security and delivery stages. The integration runs automated code retrieval, dependencies verification using **OWASP Dependency-Check**, container vulnerability scans via **Trivy**, and localized container creation.
+
+![Jenkins Automation Stage View](images/jenkins-pipeline-flow.png)
+*Figure 2: Successful execution flow across all pipeline stages in the Jenkins dashboard.*
+
+### 2. SonarQube Static Application Security Testing (SAST)
+Static scans analyze codebase parameters across 13k+ lines of code to enforce quality gates before building artifacts.
+
+![SonarQube Code Metrics Dashboard](images/sonarqube-analysis.png)
+*Figure 3: Codebase review showing a passing status for the project quality gate.*
+
+### 3. Container Runtime State
+Services operate in detached environments managed by container network definitions inside the host system.
+
+![Docker Daemon Process Status](images/docker-containers-list.png)
+*Figure 4: Active runtime status of the frontend, backend, database, cache, and SAST container instances.*
+
+---
+---
+
+## 🖥️ Live Application Deployment Preview
+
+Once the pipeline successfully finishes the `Deploy using Docker compose` phase, the web client becomes accessible over port `5173`.
+
+### Main Discover Dashboard
+![WanderLust Application Homepage UI](images/app-homepage.png)
+*Figure 5: Live production storefront showing the thematic discover layout and travel category filters.*
+
+### Dynamic Listing Detail View
+![WanderLust Listing Details Page](images/app-details-view.png)
+*Figure 6: Individual item dynamic details page routed via production environment URL maps.*
+
+---
+
 ## 🚀 Infrastructure Setup & Quick Start
 
 ### 1. Prerequisites & Tool Configurations
-Ensure your target server (e.g., AWS EC2 Ubuntu instance) has **Docker** and **Trivy** pre-installed. 
+Ensure your target server (e.g., AWS EC2 instance) has **Docker** and **Trivy** pre-installed. 
 
 **Spin up the SonarQube Container instance:**
 ```bash
