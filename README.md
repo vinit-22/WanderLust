@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # 🌍 WanderLust: DevSecOps CI/CD Pipeline
+=======
+# 🌍 WanderLust: DevSecOps End-to-End CI/CD Pipeline
+>>>>>>> d0383a4ecb61de5f2f595da1b6a25e3e20bb8de7
 
 **WanderLust** is a full-stack web application secured and deployed using an end-to-end **DevSecOps CI/CD pipeline**. By enforcing a "Shift-Left" security strategy, this architecture automatically tests code quality, uncovers library vulnerabilities, patches container layers, and safely automates production-ready delivery.
 
