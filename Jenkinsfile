@@ -6,19 +6,19 @@ pipeline{
     stages{
         stage("Clone Code from GitHub"){
             steps{
-                git url: "https://github.com/krishnaacharyaa/wanderlust.git", branch: "devops"
+                git url: "https://github.com/vinit-22/WanderLust.git/", branch: "main"
             }
         }
         stage("SonarQube Quality Analysis"){
             steps{
-                withSonarQubeEnv("Sonar"){
+                withSonarQubeEnv("SonarScanner"){
                     sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=wanderlust -Dsonar.projectKey=wanderlust"
                 }
             }
         }
         stage("OWASP Dependency Check"){
             steps{
-                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'dc'
+                dependencyCheck additionalArguments: '--scan ./', odcInstallation: 'DC'
                 dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
             }
         }
@@ -36,7 +36,7 @@ pipeline{
         }
         stage("Deploy using Docker compose"){
             steps{
-                sh "docker-compose up -d"
+                sh "docker compose up -d"
             }
         }
     }

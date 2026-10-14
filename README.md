@@ -1,133 +1,106 @@
-# Wanderlust - Your Ultimate Travel Blog 🌍✈️
+# 🌍 WanderLust: DevSecOps CI/CD Pipeline
 
-WanderLust is a simple MERN travel blog website ✈ This project is aimed to help people to contribute in open source, upskill in react and also master git.
+**WanderLust** is a full-stack web application secured and deployed using an end-to-end **DevSecOps CI/CD pipeline**. By enforcing a "Shift-Left" security strategy, this architecture automatically tests code quality, uncovers library vulnerabilities, patches container layers, and safely automates production-ready delivery.
 
-![Preview Image](https://github.com/krishnaacharyaa/wanderlust/assets/116620586/17ba9da6-225f-481d-87c0-5d5a010a9538)
+---
 
-## [Figma Design File](https://www.figma.com/file/zqNcWGGKBo5Q2TwwVgR6G5/WanderLust--A-Travel-Blog-App?type=design&node-id=0%3A1&mode=design&t=c4oCG8N1Fjf7pxTt-1)
-## [Discord Channel](https://discord.gg/FEKasAdCrG)
+## 🛠️ DevSecOps Architecture & Toolchain
 
-## 🎯 Goal of this project
+| Stage | Tool / Tech | Purpose |
+| :--- | :--- | :--- |
+| **Orchestration** | [Jenkins](https://jenkins.io "Jenkins official site") | Drives the automated pipeline script (`Jenkinsfile`) |
+| **SAST Analysis** | [SonarQube](https://sonarqube.org "SonarQube official site") (In Docker) | Static code quality gates, code smell checks & bug tracking |
+| **SCA Scanning** | [OWASP Dependency-Check](https://owasp.org "OWASP Dependency Check") | Analyzes project dependencies for known CVE vulnerabilities |
+| **Container Security** | [Trivy](https://github.io "Trivy documentation") | Scans filesystems & final Docker image layers for vulnerabilities |
+| **Runtime Container**| [Docker Engine & Compose](https://docker.com "Docker official site") | Package application services and spin up local infrastructure |
 
-At its core, this project embodies two important aims:
+---
 
-1. **Start Your Open Source Journey**: It's aimed to kickstart your open-source journey. Here, you'll learn the basics of Git and get a solid grip on the MERN stack and I strongly believe that learning and building should go hand in hand.
-2. **React Mastery**: Once you've got the basics down, a whole new adventure begins of mastering React. This project covers everything, from simple form validation to advanced performance enhancements. And I've planned much more cool stuff to add in the near future if the project hits more number of contributors.
+## 📋 Pipeline Workflow Layout
 
-_I'd love for you to make the most of this project - it's all about learning, helping, and growing in the open-source world._
+The declarative `Jenkinsfile` maps out a highly resilient automated lifecycle:
 
-## Setting up the project locally
+1. **Git Checkout:** Pulls targeted branch code directly into the workspace environment.
+2. **SonarQube Analysis (SAST):** Fires `sonar-scanner` to check code consistency and vulnerabilities.
+3. **OWASP Dependency Check (SCA):** Verifies third-party Node modules against vulnerability databases.
+4. **Sonar Quality Gate:** Halts execution if code metrics drop below accepted baselines.
+5. **Trivy Filesystem Scan:** Runs `trivy fs` to isolate underlying file system risks early.
+6. **Build & Security Scan:** Builds the Docker container image and applies image layer scanning.
+7. **Deploy:** Spins up application microservices natively via `docker-compose up -d`.
 
-### Setting up the Backend
+---
 
-1. **Fork and Clone the Repository**
+### 🏠 Infrastructure Environment
 
-   ```bash
-   git clone https://github.com/{your-username}/wanderlust.git
-   ```
+![AWS EC2 Instance Dashboard](./Screenshot/EC2.png)
+*Figure 1: Production hosting running on an AWS EC2 instance (`m7i-flex.large`).*
 
-2. **Navigate to the Backend Directory**
+---
 
-   ```bash
-   cd backend
-   ```
+## 📊 Pipeline Build & Verification Metrics
 
-3. **Install Required Dependencies**
+### 1. Jenkins Pipeline Execution
+The pipeline tracks seven core security and delivery stages. The integration runs automated code retrieval, dependencies verification using **OWASP Dependency-Check**, container vulnerability scans via **Trivy**, and localized container creation.
 
-   ```bash
-   npm i
-   ```
+![Jenkins Automation Stage View](./Screenshot/jenkins.png)
+*Figure 2: Successful execution flow across all pipeline stages in the Jenkins dashboard.*
 
-4. **Set up your MongoDB Database**
+### 2. SonarQube Static Application Security Testing (SAST)
+Static scans analyze codebase parameters across 13k+ lines of code to enforce quality gates before building artifacts.
 
-   - Open MongoDB Compass and connect MongoDB locally at `mongodb://localhost:27017`.
+![SonarQube Code Metrics Dashboard](./Screenshot/SonarQube.png)
+*Figure 3: Codebase review showing a passing status for the project quality gate.*
 
-5. **Import sample data**
+### 3. Container Runtime State
+Services operate in detached environments managed by container network definitions inside the host system.
 
-   > To populate the database with sample posts, you can copy the content from the `backend/data/sample_posts.json` file and insert it as a document in the `wanderlust/posts` collection in your local MongoDB database using either MongoDB Compass or `mongoimport`.
+![Docker Daemon Process Status](./Screenshot/Docker%20Container.png)
+*Figure 4: Active runtime status of the frontend, backend, database, cache, and SonarQube container instances.*
 
-   ```bash
-   mongoimport --db wanderlust --collection posts --file ./data/sample_posts.json --jsonArray
-   ```
+---
 
-6. **Configure Environment Variables**
+## 🖥️ Live Application Deployment Preview
 
-   ```bash
-   cp .env.sample .env
-   ```
+Once the pipeline successfully finishes the `Deploy using Docker compose` phase, the web client becomes accessible over port `5173`.
 
-7. **Start the Backend Server**
+### Accessing via IP / Localhost
+![WanderLust Application Homepage UI via IP](./Screenshot/ip%20output.png)
+*Figure 5: Target application landing interface verified active via public IP hosting.*
 
-   ```bash
-   npm start
-   ```
+### Accessing via DNS Routing
+![WanderLust Application Homepage UI via DNS](./Screenshot/DNS_Output.png)
+*Figure 6: Live production storefront showing the thematic discover layout and travel category filters.*
 
-   > You should see the following on your terminal output on successful setup.
-   >
-   > ```bash
-   > [BACKEND] Server is running on port 5000
-   > [BACKEND] Database connected: mongodb://127.0.0.1/wanderlust
-   > ```
+### Blog Post Configuration
+![WanderLust Listing Details Page](./Screenshot/Blog%20post.png)
+*Figure 7: Target details visualization view showcasing dynamic content and user post publishing features.*
 
-### Setting up the Frontend
+---
 
-1. **Open a New Terminal**
+## 🚀 Infrastructure Setup & Quick Start
 
-   ```bash
-   cd frontend
-   ```
+### 1. Prerequisites & Tool Configurations
+Ensure your target server (e.g., AWS EC2 instance) has **Docker** and **Trivy** pre-installed. 
 
-2. **Install Dependencies**
+**Spin up the SonarQube Container instance:**
+```bash
+docker run -d --name sonarqube -p 9000:9000 sonarqube:lts-community
+```
 
-   ```bash
-   npm i
-   ```
+### 2. Jenkins Server Setup
+1. Install essential plugins via **Manage Jenkins** ➡️ **Plugins**:
+   - `SonarQube Scanner`
+   - `OWASP Dependency-Check`
+   - `Docker Pipeline`
+2. Map Webhook access and link authentication tokens generated under `http://<your-ip>:9000` inside your Jenkins Global Credentials manager.
 
-3. **Configure Environment Variables**
+### 3. Running the Pipeline
+1. Create a **New Item** in Jenkins, naming it a **Pipeline** job type.
+2. Under **Pipeline Definition**, choose *Pipeline script from SCM*.
+3. Add your repository link: `https://github.com`.
+4. Define your script path (`Jenkinsfile`) and select **Build Now** to execute the automation sequence.
 
-   ```bash
-   cp .env.sample .env.local
-   ```
+---
 
-4. **Launch the Development Server**
-
-   ```bash
-   npm run dev
-   ```
-
-### Setting up with Docker
-
-1.  **Ensure Docker and Docker Compose are Installed**
-    
-2.  **Clone the Repository**
-    
-   ``` bash
-    
-    git clone https://github.com/{your-username}/wanderlust.git
-   ``` 
-3.  **Navigate to the Project Directory**
-    
-    ```bash
-    
-    cd wanderlust
-    
-    ```
-4.  **Update Environment Variables**  - If you anticipate the IP address of the instance might change, update the `.env.sample` file with the new IP address.
-
-5.  **Run Docker Compose**
-    
-    ```bash
-    
-    docker-compose up
-    ```
-    This command will build the Docker images and start the containers for the backend and frontend, enabling you to access the Wanderlust application.
-
-## 🌟 Ready to Contribute?
-
-Kindly go through [CONTRIBUTING.md](https://github.com/krishnaacharyaa/wanderlust/blob/main/.github/CONTRIBUTING.md) to understand everything from setup to contributing guidelines.
-
-## 💖 Show Your Support
-
-If you find this project interesting and inspiring, please consider showing your support by starring it on GitHub! Your star goes a long way in helping me reach more developers and encourages me to keep enhancing the project.
-
-🚀 Feel free to get in touch with me for any further queries or support, happy to help :)
+## 🔒 Security Policy
+All deployment builds **must clear zero-tolerance thresholds** for Critical vulnerabilities flagged by both Trivy and OWASP scanners before entering public production stages.
